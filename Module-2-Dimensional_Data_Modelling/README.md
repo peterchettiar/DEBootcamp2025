@@ -47,7 +47,7 @@ In the realm of data, a `dimension` is defined as a descriptive data structure t
 
 This is where the concept of slowly changing dimensions (SCDs) addresses this problem. It is a concept of how attributes are updated overtime without simply overwriting and track historical changes thereby allowing for analysis of how dimensions evolve. SCDs provide strategies for managing these changes and the following are the common types of SCDs:
 
-#### 1. Fixed (Static) Dimensions
+#### 📌 Fixed (Static) Dimensions
 - Also called **Type 0 Slowly Changing Dimensions**
 - The attributes never change once inserted
 - Any change is ignored (used for fixed entities like country codes, currency symbols, etc.)
@@ -60,7 +60,7 @@ This is where the concept of slowly changing dimensions (SCDs) addresses this pr
 
 If Alice moves to Singapore, the country remains **Japan** in the dimension.
 
-#### 2. Type 1 SCD - Overwrite
+#### 📌 Type 1 SCD - Overwrite
 - When an attribute changes, overwrite the old value
 - No history is kept
 - `USE CASE` : Fixing incorrect data (e.g. correcting a misspelled name)
@@ -76,7 +76,7 @@ If Alice moves to Singapore, the country remains **Japan** in the dimension.
 |-------------|-------|--------|
 | C001        | Alice | West   |
 
-#### 3. Type 2 SCD - Add New Row
+#### 📌 Type 2 SCD - Add New Row
 - Creates a new row for each change
 - Keep full history with effective dates or versioning
 - Fact tables link to the correct historical version
@@ -88,7 +88,7 @@ If Alice moves to Singapore, the country remains **Japan** in the dimension.
 | C001        | Alice | East   | 1       | 2023-01-01     |
 | C001        | Alice | West   | 2       | 2024-05-01     |
 
-#### 4. Type 3 SCD - Add New Column
+#### 📌 Type 3 SCD - Add New Column
 - Keep a limited history by adding new columns
 - Only tracks current and previous values
 - `USE CASES` : Useful when you only need the last known change (e.g. old vs new region)
