@@ -16,4 +16,14 @@ Now, to optimise the database the tables within need to built in a certain struc
 
 Besides the schema design, we can take a step further optimising each table (both `fact` and `dimension`) through the usage of different data types. Complex data types such as `STRUCT` and `ARRAY` can be used to optimised fields in tables for querying. 
 
-- `STRUCT` : Composite data type that groups together multiple fields of different data types (conceptually similar to `dict` in python)
+- `STRUCT` : Composite data type that groups together multiple fields of different data types (i.e. to model nested records, conceptually similar to `dict` in python)
+- `ARRAY` : An ordered collection of elements of the same data type. It is similar to a list or an array in most programming languages
+- You can also combine both complex data types to represent complex hierarchical data. An example of an `ARRAY` containing `STRUCT` would be as follows:
+```json
+{
+  "order_items": [
+    { "product_id": "P123", "quantity": 2, "price": 10.5 },
+    { "product_id": "P456", "quantity": 1, "price": 20.0 }
+  ]
+}
+```
