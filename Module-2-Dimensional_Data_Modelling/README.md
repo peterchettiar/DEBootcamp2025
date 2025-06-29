@@ -18,7 +18,7 @@ Besides the schema design, we can take a step further optimising each table (bot
 
 - `STRUCT` : Composite data type that groups together multiple fields of different data types (i.e. to model nested records, conceptually similar to `dict` in python)
 - `ARRAY` : An ordered collection of elements of the same data type. It is similar to a list or an array in most programming languages
-- You can also combine both complex data types to represent complex hierarchical data. An example of an `ARRAY` containing `STRUCT` would be as follows:
+- You can also combine both complex data types to represent complex hierarchical data. An example of an `ARRAY` containing `STRUCT` objects would be as follows:
 ```json
 {
   "order_items": [
@@ -27,3 +27,13 @@ Besides the schema design, we can take a step further optimising each table (bot
   ]
 }
 ```
+- Benefits of Using an Array of STRUCTs
+
+| Benefit               | Why It Matters                                                                 |
+|------------------------|--------------------------------------------------------------------------------|
+| **Natural hierarchy**  | Reflects real-world nested relationships (e.g., orders with multiple items)   |
+| **Cohesive data**      | Keeps multi-field repeating data together, avoiding index mismatches          |
+| **Easier denormalization** | Simplifies modeling by avoiding joins while retaining structure         |
+| **Query flexibility**  | Easily flatten nested data using `UNNEST` or `explode` for analysis           |
+| **Interoperability**   | Maps well to semi-structured formats like JSON, Avro, and Parquet             |
+| **Performance**        | Modern engines optimize nested queries and storage for efficiency             |
