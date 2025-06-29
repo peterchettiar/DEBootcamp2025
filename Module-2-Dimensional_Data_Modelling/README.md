@@ -27,8 +27,7 @@ Besides the schema design, we can take a step further optimising each table (bot
   ]
 }
 ```
-- Benefits of Using an Array of STRUCTs
-
+### 📌 Benefits of Using an Array of STRUCTs
 | Benefit               | Why It Matters                                                                 |
 |------------------------|--------------------------------------------------------------------------------|
 | **Natural hierarchy**  | Reflects real-world nested relationships (e.g., orders with multiple items)   |
