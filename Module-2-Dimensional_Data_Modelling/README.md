@@ -6,7 +6,7 @@
   - [Complex Data Types](#complex-data-types)
   - [Types of Dimensions](#types-of-dimensions)
   - [Database Types](#database-types)
-  - [Normailsation](#normalisation)
+  - [Normalisation](#normalisation)
   - [Cumulative Table Design](#cumulative-table-design)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
