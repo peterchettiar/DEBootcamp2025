@@ -5,7 +5,7 @@
 - [Dimensional Data Modelling Complex Data Type and Cumulation](#dimensional-data-modelling-complex-data-type-and-cumulation)
   - [Complex Data Types](#complex-data-types)
   - [Types of Dimensions](#types-of-dimensions)
-  - [Data Modelling Types](#data-modelling-types)
+  - [Database Types](#database-types)
   - [Cumulative Table Design](#cumulative-table-design)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
@@ -102,10 +102,53 @@ If Alice moves to Singapore, the country remains **Japan** in the dimension.
 - Type 4: Seperate history table (current in main dimension, old values in a seperate table).
 - Type 6 (Hybrid): Combines Types 1, 2, and 3 to provide both current values and history in one table.
 
-### Data Modelling Types
+### Database Types
 
-When designing data models, it's important to consider the data consumers before choosing one of the following data systems/architecture:
+When designing data models, it's important to consider the data consumers before choosing one of the following database systems:
 
-**1. Online Transaction Processing (OLTP)**
+** 🔹 1. Online Transaction Processing (OLTP)**
 
+**Purpose**: Handles day-to-day **transactional operations** like inserts, updates, and deletes.
+
+**Key Characteristics:**
+- Highly normalized (often 3NF)
+- Supports thousands of short transactions per second
+- Fast reads and writes
+- Real-time data consistency
+- Focus: CRUD operations (Create, Read, Update, Delete)
+
+**Examples:**
+- Banking systems (money transfers)
+- E-commerce platforms (placing orders)
+- Inventory management systems
+
+## 🔹 OLAP – Online Analytical Processing
+
+**Purpose**: Handles **complex analytical queries** on historical or aggregated data for decision-making.
+
+**Key Characteristics:**
+- Denormalized structure (Star or Snowflake schema)
+- Optimized for large read-intensive workloads
+- Supports multi-dimensional analysis (slice, dice, drill down)
+- Focus: Aggregation, Reporting, Data Exploration
+
+**Examples:**
+- Business Intelligence dashboards
+- Sales forecasting reports
+- Customer segmentation analysis
+
+## 🧠 OLTP vs OLAP – Comparison Table
+
+| Feature                  | OLTP                                      | OLAP                                      |
+|--------------------------|--------------------------------------------|--------------------------------------------|
+| **Purpose**              | Process real-time transactions             | Perform complex analytical queries         |
+| **Data Volume**          | Small per transaction                      | Large, historical datasets                 |
+| **Operations**           | Insert, Update, Delete                     | Read-heavy: SELECT with aggregates         |
+| **Normalization**        | Highly normalized (3NF)                    | Denormalized (Star/Snowflake schema)       |
+| **Users**                | Front-line staff, end-users                | Analysts, Executives, Data Scientists      |
+| **Query Types**          | Simple and fast                            | Complex, long-running                      |
+| **Example Systems**      | POS systems, Banking apps, ERPs            | Data warehouses, BI platforms              |
+| **Latency**              | Millisecond response time                  | Seconds to minutes for large queries       |
+| **Data Freshness**       | Real-time                                  | Periodically refreshed (batch or stream)   |
+| **Concurrency**          | High (many users at once)                  | Medium to low                              |
 
