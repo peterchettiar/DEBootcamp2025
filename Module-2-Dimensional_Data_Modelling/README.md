@@ -100,4 +100,12 @@ If Alice moves to Singapore, the country remains **Japan** in the dimension.
 
 #### Other Less Common Types
 - Type 4: Seperate history table (current in main dimension, old values in a seperate table).
-- Type 6 (Hybrid): Combines Types 1, 2, and 3 to provide both current values and history in one table. 
+- Type 6 (Hybrid): Combines Types 1, 2, and 3 to provide both current values and history in one table.
+
+### Data Modelling Types
+
+When designing data models, it's important to consider the data consumers before choosing one of the following data systems/architecture:
+
+**1. Online Transaction Processing (OLTP)**
+
+
