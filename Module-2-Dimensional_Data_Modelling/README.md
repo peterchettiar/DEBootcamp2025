@@ -6,6 +6,7 @@
   - [Complex Data Types](#complex-data-types)
   - [Types of Dimensions](#types-of-dimensions)
   - [Database Types](#database-types)
+  - [Normailsation](#normalisation)
   - [Cumulative Table Design](#cumulative-table-design)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
@@ -152,3 +153,97 @@ When designing data models, it's important to consider the data consumers before
 | **Data Freshness**       | Real-time                                  | Periodically refreshed (batch or stream)   |
 | **Concurrency**          | High (many users at once)                  | Medium to low                              |
 
+### Normalisation
+
+In the comparison table above, we had mentioned that `OLTP` and `OLAP` differed in terms of normailisation. `OLTP` is highly normalised while `OLAP` is denormalised. But what is it exactly?
+
+`Normalisation` is the process of structuring a relational database in a way that reduces data redundancy and improve data integrity. It involves organising data into multiple related tables and applying rules (called normal forms) to ensure each piece of data is stored only once and in the right place.
+
+This is done so in steps called `normal forms`, each adding more structure:
+
+**🔹 1NF – First Normal Form (Atomicity)**
+
+**Rule**: Eliminate repeating groups. Ensure each column contains **atomic (indivisible)** values.
+
+**❌ Unnormalized Table:**
+
+| OrderID | CustomerName | Products                 | Quantities |
+|---------|--------------|--------------------------|------------|
+| 1001    | Alice         | TV, Microwave             | 1, 2       |
+| 1002    | Bob           | Laptop                    | 1          |
+
+**✅ 1NF Table:**
+
+| OrderID | CustomerName | Product    | Quantity |
+|---------|--------------|------------|----------|
+| 1001    | Alice         | TV         | 1        |
+| 1001    | Alice         | Microwave  | 2        |
+| 1002    | Bob           | Laptop     | 1        |
+
+➡ Now, each field contains only **one value per cell** — atomic and organized.
+
+**🔹 2NF – Second Normal Form (No Partial Dependencies)**
+
+**Rule**: Be in 1NF **and** eliminate partial dependencies (i.e., non-key fields must depend on the **whole** primary key).
+
+Assume our current primary key is `(OrderID, Product)`.
+
+**❌ 1NF Table with Partial Dependency:**
+
+| OrderID | Product    | CustomerName | Quantity |
+|---------|------------|--------------|----------|
+| 1001    | TV         | Alice         | 1        |
+| 1001    | Microwave  | Alice         | 2        |
+| 1002    | Laptop     | Bob           | 1        |
+
+➡ `CustomerName` depends only on `OrderID`, not on both `OrderID` and `Product`.
+
+**✅ 2NF Tables:**
+
+**Orders Table:**
+
+| OrderID | CustomerName |
+|---------|--------------|
+| 1001    | Alice         |
+| 1002    | Bob           |
+
+**OrderDetails Table:**
+
+| OrderID | Product    | Quantity |
+|---------|------------|----------|
+| 1001    | TV         | 1        |
+| 1001    | Microwave  | 2        |
+| 1002    | Laptop     | 1        |
+
+➡ `CustomerName` now lives in a table where it depends **entirely** on the primary key.
+
+**🔹 3NF – Third Normal Form (No Transitive Dependencies)**
+
+**Rule**: Be in 2NF **and** eliminate transitive dependencies (i.e., non-key fields must depend only on the primary key, not on other non-key attributes).
+
+**❌ 2NF Table with Transitive Dependency:**
+
+| CustomerID | CustomerName | ZipCode | City     |
+|------------|---------------|---------|----------|
+| C001       | Alice          | 10001   | New York |
+| C002       | Bob            | 90001   | LA       |
+
+➡ `City` depends on `ZipCode`, which is not a key — this is a transitive dependency.
+
+**✅ 3NF Tables:**
+
+**Customer Table:**
+
+| CustomerID | CustomerName | ZipCode |
+|------------|---------------|---------|
+| C001       | Alice          | 10001   |
+| C002       | Bob            | 90001   |
+
+**ZipCode Table:**
+
+| ZipCode | City     |
+|---------|----------|
+| 10001   | New York |
+| 90001   | LA       |
+
+➡ Now, **each non-key field** depends only on the **primary key** of its table.
