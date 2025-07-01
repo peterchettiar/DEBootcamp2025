@@ -106,7 +106,7 @@ If Alice moves to Singapore, the country remains **Japan** in the dimension.
 
 When designing data models, it's important to consider the data consumers before choosing one of the following database systems:
 
-** 🔹 1. Online Transaction Processing (OLTP)**
+**🔹 1. Online Transaction Processing (OLTP)**
 
 **Purpose**: Handles day-to-day **transactional operations** like inserts, updates, and deletes.
 
@@ -122,7 +122,7 @@ When designing data models, it's important to consider the data consumers before
 - E-commerce platforms (placing orders)
 - Inventory management systems
 
-## 🔹 OLAP – Online Analytical Processing
+**🔹 OLAP – Online Analytical Processing**
 
 **Purpose**: Handles **complex analytical queries** on historical or aggregated data for decision-making.
 
@@ -137,7 +137,7 @@ When designing data models, it's important to consider the data consumers before
 - Sales forecasting reports
 - Customer segmentation analysis
 
-## 🧠 OLTP vs OLAP – Comparison Table
+**🧠 OLTP vs OLAP – Comparison Table**
 
 | Feature                  | OLTP                                      | OLAP                                      |
 |--------------------------|--------------------------------------------|--------------------------------------------|
