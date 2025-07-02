@@ -263,3 +263,6 @@ Assume our current primary key is `(OrderID, Product)`.
 | 90001   | LA       |
 
 ➡ Now, **each non-key field** depends only on the **primary key** of its table.
+
+### Cumulative Table Design
+
