@@ -115,7 +115,7 @@ When designing data models, it's important to consider the data consumers before
 **Purpose**: Handles day-to-day **transactional operations** like inserts, updates, and deletes.
 
 **Key Characteristics:**
-- Highly normalized (often 3NF)
+- Highly normalized (often 3NF) -> optimised for low-latency, low-volume queries
 - Supports thousands of short transactions per second
 - Fast reads and writes
 - Real-time data consistency
@@ -131,7 +131,7 @@ When designing data models, it's important to consider the data consumers before
 **Purpose**: Handles **complex analytical queries** on historical or aggregated data for decision-making.
 
 **Key Characteristics:**
-- Denormalized structure (Star or Snowflake schema)
+- Denormalized structure (Star or Snowflake schema), hence minimises `JOINS`
 - Optimized for large read-intensive workloads
 - Supports multi-dimensional analysis (slice, dice, drill down)
 - Focus: Aggregation, Reporting, Data Exploration
@@ -155,6 +155,17 @@ When designing data models, it's important to consider the data consumers before
 | **Latency**              | Millisecond response time                  | Seconds to minutes for large queries       |
 | **Data Freshness**       | Real-time                                  | Periodically refreshed (batch or stream)   |
 | **Concurrency**          | High (many users at once)                  | Medium to low                              |
+
+**🔹 Master Data**
+
+- Table that sits in between the `OLTP` and `OLAP` layers
+- Provides clean, complete and deduplicated data that supports both single-record access (`OLTP`) and analystical operations (`OLAP`)
+- Often used as a source of truth and preferred over querying snapshots, which can be unreliable.
+- Important to have this layer to prevent mismatches (e.g. Modelling an analytical `OLAP` system as a transactional `OLTP` system - Users have to perform multiple `JOIN` which slows the query performance)
+- A visual of the flow of systems is as follows:
+![image](https://github.com/user-attachments/assets/3e97bc15-3740-4f1b-b2b7-6be19ad92789)
+- The `Master Data` table is usually one large table which is a combined version of all the normalised transactional tables from the `OLTP` systems
+- After which it can be split into `OLAP` cubes where users of the data can perform their aggregations optimally to generate their metrics
 
 ### Normalisation
 
