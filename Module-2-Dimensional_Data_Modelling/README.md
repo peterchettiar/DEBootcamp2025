@@ -15,7 +15,9 @@ A Data Engineer's primary role is to design, build, and maintain the infrastruct
 
 Essentially, the final product is a data warehouse / lakehouse that is built and maintained by the data engieers for the perusal of the business. This should not be functional but rather performant. This means that that the data should not be just available at the request of its users but also fast when users query the database.
 
-Now, to optimise the database, the tables within need to built in a certain strucure, and hence the term data modelling was coined. It is simply techniques in which data is structured for querying and analysis, particularly for data warehouses and business intelligence systems. It organises data into `facts` and `dimensions` tables, making it easier to understand and retrieve information. This design is optimised for data retrieval and provide a clear, concise representation of data for business users. The resulting structure is often visualised as a `star` or `snowflake` schema.
+Now, to optimise the database, the tables within need to be built in a certain structure, and hence the term data modelling was coined. It is simply techniques in which data is structured for querying and analysis, particularly for data warehouses and business intelligence systems. It organises data into `facts` and `dimensions` tables, making it easier to understand and retrieve information. This design is optimised for data retrieval and provide a clear, concise representation of data for business users. The resulting structure is often visualised as a `star` or `snowflake` schema.
+
+> Note: The description above is in relation to `OLAP` systems. And its importance to distinguish the difference between a `data model` and `database design`, the former is like the blueprint to the latter (i.e. `data model` is the logical representation while `database design` is the implementation).
 
 ### Complex Data Types
 
@@ -32,6 +34,7 @@ Besides the schema design, we can take a step further optimising each table (bot
   ]
 }
 ```
+
 #### 📌 Benefits of Using an Array of STRUCTs
 | Benefit               | Why It Matters                                                                 |
 |------------------------|--------------------------------------------------------------------------------|
