@@ -173,6 +173,8 @@ In the comparison table above, we had mentioned that `OLTP` and `OLAP` differed 
 
 `Normalisation` is the process of structuring a relational database in a way that reduces data redundancy and improve data integrity. It involves organising data into multiple related tables and applying rules (called normal forms) to ensure each piece of data is stored only once and in the right place.
 
+>Note: The concept of normalisation applies to transactional systems (i.e. `OLTP`)
+
 This is done so in steps called `normal forms`, each adding more structure:
 
 **🔹 1NF – First Normal Form (Atomicity)**
