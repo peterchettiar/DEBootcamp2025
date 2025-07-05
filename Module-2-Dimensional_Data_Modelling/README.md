@@ -266,3 +266,20 @@ Assume our current primary key is `(OrderID, Product)`.
 
 ### Cumulative Table Design
 
+A `cumulative table design` refers to a data modelling technique where the table is built to store running totals or aggregated snapshots over time, rather than just raw transactional data.
+
+The purpose - to pre-aggregate and persist cumulative values like daily/weekly/monthly totals, so that analytical queries are faster and more efficient. It's often used in data warehouses and BI systems for tracking metrics over time. The benefit of doing so is to avoid re-calculating total on the fly, thereby improving query performance of arbitrarily large time frames.
+
+Lets take the following diagram of the high-level pipeline design for this pattern as an example:
+![image](https://github.com/user-attachments/assets/1bf4fed5-f091-4d67-a98b-8e69978759e9)
+
+1. Preparation of Daily Status Tables
+   a. Daily transaction data is grouped and daily metrics are calculated.
+   b. We initially build our daily metrics table that is at the grain of whatever our entity is. This data is derived from whatever event sources we have upstream.
+2. Combining Cumulative Table and Daily Data
+   a. After we have our daily metrics, we `FULL OUTER JOIN` yesterday's cumulative table with today's daily data and build our metric arrays for each user.
+   b. This allows us to bring the new history in without having to scan all of it **(a big performance boost)**
+3. Lastly, we write it to last table - the cumulative table is updated or written to a new table
+
+>[!TIP]
+> When we perform a `FULL OUTER JOIN` we are essentially combining all rows from both tables (daily metrics table as well as the cumulative metrics table), matching on keys. And these rows from each table are joined horizontally (i.e. side-by-side), not vertically. Hence, if their column names in both tables are identical (and it should!), then the total number of columns should be double after this step. But if you `COALESCE` (function that returns the first non-null value in a list) the fields of the same name from both tables, you can merge tables with a unified view with collapsing fields (i.e. you only have one set of columns with overlapping rows combined).
