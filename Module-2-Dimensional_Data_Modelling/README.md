@@ -8,6 +8,7 @@
   - [Database Types](#database-types)
   - [Normalisation](#normalisation)
   - [Cumulative Table Design](#cumulative-table-design)
+  - [The compactness vs usability tradeoff](#the-compactness-vs-usability-tradeoff)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
 
@@ -306,3 +307,5 @@ Lets take the following diagram of the high-level pipeline design for this patte
 *Imagine you have a cumulative table tracking website traffic. Each entry shows the total number of unique visitors up to a specific day. If you need to backfill historical data, you would start with the earliest date and work your way forward. You'd calculate the cumulative traffic for each day based on the traffic from the previous days. If you tried to backfill a later date before an earlier one, you might miss some visitor data from the intervening days, leading to an incorrect cumulative count.*
 
 - Handling Personally Identifiable Information (PII - information that can help identify a person) data can be a mess since deleted/inactive users get carried forward
+
+### The compactness vs usability tradeoff
