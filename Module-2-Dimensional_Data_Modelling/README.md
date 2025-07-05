@@ -275,11 +275,13 @@ Lets take the following diagram of the high-level pipeline design for this patte
 
 1. Preparation of Daily Status Tables
 
-   a. Daily transaction data is grouped and daily metrics are calculated.
+   a. Procure the data for today from your source of truth (i.e. Master Data)
+
+   b. Daily transaction data is grouped using `GROUPBY` clause and daily metrics are calculated.
    
-   b. We initially build our daily metrics table that is at the grain of whatever our entity is. This data is derived from whatever event sources we have upstream.
+   c. We initially build our daily metrics table that is at the grain of whatever our entity is. This data is derived from whatever event sources we have upstream.
    
-2. Combining Cumulative Table and Daily Data
+3. Combining Cumulative Table and Daily Data
  
    a. After we have our daily metrics, we `FULL OUTER JOIN` yesterday's cumulative table with today's daily data and build our metric arrays for each user.
    
@@ -287,7 +289,20 @@ Lets take the following diagram of the high-level pipeline design for this patte
    
    c. This allows us to bring the new history in without having to scan all of it **(a big performance boost)**
 
-3. Lastly, we write it to last table - the cumulative table is updated or written to a new table
+4. Lastly, we write it to last table - the cumulative table is updated or written to a new table
 
 >[!TIP]
 > When we perform a `FULL OUTER JOIN` we are essentially combining all rows from both tables (daily metrics table as well as the cumulative metrics table), matching on keys. And these rows from each table are joined horizontally (i.e. side-by-side), not vertically. Hence, if their column names in both tables are identical (and it should!), then the total number of columns should be double after this step. But if you `COALESCE` (function that returns the first non-null value in a list) the fields of the same name from both tables, you can merge tables with a unified view with collapsing fields (i.e. you only have one set of columns with overlapping rows combined).
+
+**✅ Strengths**
+
+- Historical analysis without shuffle - By cumulatively defining metrics, you can avoid using expensive operations such as `GROUPBY` and "shuffles" on large datasets. For example, say that we wanted to see when a user was last active, we can simply have their last 30 days "status" in one row in an `ARRAY`. This way the data of when they were last active is already available in the table. This enables a massively scalable queries on historical data.
+- Easy "transition" analysis - with CTD you are able to analyse changes in states such as "Active" today but "Inactive" yesterday easily.
+
+**⚠️ Weaknesses**
+
+- Can only be backfilled sequentially - since it relies on yesterday's data you can't backfill in parallel. This is necessary when the table relies on previous periods' data for its calculations, making parallel backfilling impossible. Example:
+
+*Imagine you have a cumulative table tracking website traffic. Each entry shows the total number of unique visitors up to a specific day. If you need to backfill historical data, you would start with the earliest date and work your way forward. You'd calculate the cumulative traffic for each day based on the traffic from the previous days. If you tried to backfill a later date before an earlier one, you might miss some visitor data from the intervening days, leading to an incorrect cumulative count.*
+
+- Handling Personally Identifiable Information (PII - information that can help identify a person) data can be a mess since deleted/inactive users get carried forward
