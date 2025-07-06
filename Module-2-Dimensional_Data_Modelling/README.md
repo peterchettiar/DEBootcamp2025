@@ -461,3 +461,16 @@ Let's look at the example given in the lecture. Airbnb has about 6 million listi
 | 456        | '2024-01-01'|
 | 456        | '2024-01-02'|
 | 456        | '2024-01-03'|
+
+If you do the sorting right, `PARQUET` will keep these two about the same size. How? -> Using `Run-Length Encoding` (RLE) compression
+
+`RLE` is a process is a lossless compression technique that compresses repeated consecutive values by storing the value and number of time it repeats. It compresses columns independently and works well if adjacent values repeat (hence sorting is important!). In our example, we have 2 billion rows, assuming data is sorted by `Listing_ID` (which is critical for `RLE` to be effective), `RLE` stores the column as:
+
+```python
+[
+  { value: 123, run_length: 3 },
+  { value: 456, run_length: 3 }
+]
+```
+
+> Note: Only the repeated columns are compressed, not the temporal column due to high cardinality. This process reduces the data size being stored and improves the performance significantly making it just as fast as the `ARRAY` table, arguably.
