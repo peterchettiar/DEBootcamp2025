@@ -389,6 +389,7 @@ We had spoken a little about each of these complex data types in an earlier sect
 3. `ARRAY`
 - Holds multiple values of the same data type
 - Ordinal - refers to something that has a position or order in sequence
+- Arrays are suitable for ordered datasets, and they can contain structs or maps as elements
 - E.g. sample data with list of strings for each user's recent purchases : `ARRAY<STRING>` - this is where `UNNEST` is required to flatten the data :
 ```json
 [
@@ -410,7 +411,7 @@ We had spoken a little about each of these complex data types in an earlier sect
   }
 ]
 ```
- - A `SQL` query to show a table with a `user_id` column and an `ARRAY` column being flattened as well as an order column being included in result:
+ - A `SQL` query to show a table with a `user_id` column and an `ARRAY` column being flattened as well as an order column being included in result in `postgres`:
 ```sql
 SELECT
   user_id,
