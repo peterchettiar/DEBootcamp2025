@@ -10,6 +10,7 @@
   - [Cumulative Table Design](#cumulative-table-design)
   - [The compactness vs usability tradeoff](#the-compactness-vs-usability-tradeoff)
   - [Struct vs Array vs Map](#struct-vs-array-vs-map)
+  - [Temporal Cardinality Explosion](#temporal-cardinality-explosion)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
 
@@ -383,7 +384,6 @@ We had spoken a little about each of these complex data types in an earlier sect
     }
   }
 ]
-
 ```
 
 3. `ARRAY`
@@ -420,3 +420,24 @@ SELECT
 FROM user_favorites,
 UNNEST(favorite_fruits) WITH ORDINALITY AS fruit(fruit_name, ordinal);
 ```
+### Temporal Cardinality Explosion
+
+💥 Problem: Temporal Cardinality Explosion
+Occurs when:
+
+A slowly changing dimension (like `customer_dim`) tracks changes over time (e.g., SCD Type 2)
+
+Each change creates a new row
+
+Over time, a single logical entity (e.g., `customer_id = 123`) has many physical records
+
+🔁 This creates a high cardinality (more unique rows), especially when combined with time granularity (daily, hourly, etc.)
+
+⚠️ Pain Points of High Cardinality in Dimensions
+| Problem Area              | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| 📊 Joins with Fact Tables | Many rows per dimension key (e.g. `customer_id`) due to versioning inflate joins, causing data bloat and duplicates if not properly filtered. |
+| 🐢 Query Performance       | More rows to scan, filter, and aggregate slows down query execution — especially in OLAP systems. |
+| 💾 Storage Costs           | Versioning and temporal tracking (e.g., SCD Type 2) rapidly increase row counts and disk usage. |
+| 🧠 Model Complexity        | Requires more advanced logic (e.g., point-in-time joins, date filters) to return accurate results. |
+| 🧩 Analytical Bugs         | Incorrect joins or aggregations can lead to overcounting, undercounting, or misrepresented historical views. |
