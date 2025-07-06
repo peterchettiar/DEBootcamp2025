@@ -441,3 +441,18 @@ Over time, a single logical entity (e.g., `customer_id = 123`) has many physical
 | 💾 Storage Costs           | Versioning and temporal tracking (e.g., SCD Type 2) rapidly increase row counts and disk usage. |
 | 🧠 Model Complexity        | Requires more advanced logic (e.g., point-in-time joins, date filters) to return accurate results. |
 | 🧩 Analytical Bugs         | Incorrect joins or aggregations can lead to overcounting, undercounting, or misrepresented historical views. |
+
+Let's look at the example given in the lecture. Airbnb has about 6 million listings, and if we want to know the nightly pricing and availability of each night for the next year that's about 365 * 6 million or about 2 billion nights. Should this dataset be:
+1. Listing-level with an `ARRAY` of nights?
+| Listing_ID | Dates |
+| 123 | ['2024-01-01', '2024-01-02', '2024-01-03', ...] |
+| 456 | ['2024-01-01', '2024-01-02', '2024-01-03', ...] |
+
+2. Listing night level with 2 billion rows?
+| Listing_ID | Dates |
+| 123 | '2024-01-01' |
+| 123 | '2024-01-02' |
+| 123 | '2024-01-03' |
+| 456 | '2024-01-01' |
+| 456 | '2024-01-02' |
+| 456 | '2024-01-03' |
