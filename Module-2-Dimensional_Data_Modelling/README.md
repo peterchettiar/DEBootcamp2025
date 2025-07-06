@@ -315,3 +315,20 @@ There is a lot of tradeoffs here and a lot of it goes back to the `OLTP` and `OL
 On the flipside, you have the most compact tables (i.e. not human readable). They are compressed to be as small as possible and cannot be queried directly until they're decoded. In other words, a compact table can just have the identifier as well as a blob of bytes given that the table has been compressed using a compression codex. Hence, in order to read the data you need to first decompress and decode it in order to use it for analytics. From an operation perspective it makes sense so as to minimise the network IO (e.g. In the AirBnB app when you request availability calendar data, you receive a compact table which can be decoded by the app itself - this approach reduces the network IO but is not suitable for analytics). These types of tables are more software engineering focused for production level data, hence you would use this type of table in online systems where latency and data volumes matter a lot. Consumers are usually highly technical.
 
 There is a middle ground between the most compact and most usable table, which is where you use `ARRAY`, `MAP` and `STRUCT` to crunch the data down a little bit, but its a little bit harder to query. These types of tables are used in upstream staging / master data where the majority of  consumers are other data engineers.
+
+This table compares three common types of table designs based on their **intended audience**, **use case**, and **queryability** — especially across OLTP and OLAP systems.
+
+| Table Type              | Description                                                                                      | Queryability             | Primary Consumers        | System Context     | Use Case Examples                           |
+|-------------------------|--------------------------------------------------------------------------------------------------|--------------------------|---------------------------|--------------------|----------------------------------------------|
+| **Most Usable**         | - Human-readable<br>- Clean dimensions<br>- Easy `WHERE`/`GROUP BY` usage                         | ✅ Very easy              | Analysts, less technical users | OLAP (Analytical)  | Dashboards, Reports, BI tools               |
+|                         | - Analytics-focused<br>- Modeled with dimensional IDs and clean schema                          |                          |                           |                    |                                              |
+| **Middle Ground**       | - Uses **ARRAY**, **MAP**, **STRUCT** to reduce size<br>- Semi-structured format                 | ⚠️ Moderate (harder joins) | Data Engineers, Upstream Pipelines | Staging / Master | Cleaned data, shared layers, intermediate joins |
+|                         | - Not as verbose as usable tables, not as compressed as compact tables                          |                          |                           |                    |                                              |
+| **Most Compact**        | - Identifiers + encoded blob (e.g. compressed binary or JSON)<br>- Requires decoding to be usable | ❌ Not directly queryable | Backend Engineers, Systems | OLTP / Production | API responses, availability calendars (e.g. Airbnb) |
+|                         | - Optimized for storage, performance, and network IO<br>- Not analytics-friendly                 |                          |                           |                    |                                              |
+
+🧠 Summary
+
+- **OLAP systems** favor **usable tables**: designed for human readability and fast analytics.
+- **OLTP systems** favor **compact tables**: optimized for low latency and minimal network I/O.
+- **Intermediate formats** using semi-structured types (e.g., `ARRAY`, `STRUCT`) balance size and usability — common in data engineering layers.
