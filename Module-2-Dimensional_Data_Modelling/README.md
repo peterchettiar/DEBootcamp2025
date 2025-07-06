@@ -14,7 +14,7 @@
 
 A Data Engineer's primary role is to design, build, and maintain the infrastructure and systems that allow organisations to collect, store, process and analyse data. They ensure that the data is readily available and in a usable format for data scientists, analysts, and other stakeholders to derive valuable insights and make informed decisions.
 
-Essentially, the final product is a data warehouse / lakehouse that is built and maintained by the data engieers for the perusal of the business. This should not be functional but rather performant. This means that that the data should not be just available at the request of its users but also fast when users query the database.
+Essentially, the final product is a data warehouse / lakehouse that is built and maintained by the data engieers for the perusal of the business. This should not be only functional but rather performant as well. This means that that the data should not be just available at the request of its users but also fast when users query the database.
 
 Now, to optimise the database, the tables within need to be built in a certain structure, and hence the term data modelling was coined. It is simply techniques in which data is structured for querying and analysis, particularly for data warehouses and business intelligence systems. It organises data into `facts` and `dimensions` tables, making it easier to understand and retrieve information. This design is optimised for data retrieval and provide a clear, concise representation of data for business users. The resulting structure is often visualised as a `star` or `snowflake` schema.
 
@@ -309,3 +309,9 @@ Lets take the following diagram of the high-level pipeline design for this patte
 - Handling Personally Identifiable Information (PII - information that can help identify a person) data can be a mess since deleted/inactive users get carried forward
 
 ### The compactness vs usability tradeoff
+
+There is a lot of tradeoffs here and a lot of it goes back to the `OLTP` and `OLAP` systems and the differences there. The most usable tables are ones where the identifiers have dimensions are easy to use. You can easily `WHERE` and `GROUPBY` them. These types of tables are more analytics focused, and hence used by consumers who are less technical in the `OLAP` cube layer.
+
+On the flipside, you have the most compact tables (i.e. not human readable). They are compressed to be as small as possible and cannot be queried directly until they're decoded. In other words, a compact table can just have the identifier as well as a blob of bytes given that the table has been compressed using a compression codex. Hence, in order to read the data you need to first decompress and decode it in order to use it for analytics. From an operation perspective it makes sense so as to minimise the network IO (e.g. In the AirBnB app when you request availability calendar data, you receive a compact table which can be decoded by the app itself - this approach reduces the network IO but is not suitable for analytics). These types of tables are more software engineering focused for production level data, hence you would use this type of table in online systems where latency and data volumes matter a lot. Consumers are usually highly technical.
+
+There is a middle ground between the most compact and most usable table, which is where you use `ARRAY`, `MAP` and `STRUCT` to crunch the data down a little bit, but its a little bit harder to query. These types of tables are used in upstream staging / master data where the majority of  consumers are other data engineers.
