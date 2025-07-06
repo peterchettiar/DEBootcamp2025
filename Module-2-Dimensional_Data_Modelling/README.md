@@ -443,12 +443,14 @@ Over time, a single logical entity (e.g., `customer_id = 123`) has many physical
 | 🧩 Analytical Bugs         | Incorrect joins or aggregations can lead to overcounting, undercounting, or misrepresented historical views. |
 
 Let's look at the example given in the lecture. Airbnb has about 6 million listings, and if we want to know the nightly pricing and availability of each night for the next year that's about 365 * 6 million or about 2 billion nights. Should this dataset be:
+
 1. Listing-level with an `ARRAY` of nights?
 | Listing_ID | Dates |
+|------------|-------|
 | 123 | ['2024-01-01', '2024-01-02', '2024-01-03', ...] |
 | 456 | ['2024-01-01', '2024-01-02', '2024-01-03', ...] |
 
-2. Listing night level with 2 billion rows?
+3. Listing night level with 2 billion rows?
 | Listing_ID | Dates |
 | 123 | '2024-01-01' |
 | 123 | '2024-01-02' |
