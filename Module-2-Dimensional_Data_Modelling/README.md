@@ -9,6 +9,7 @@
   - [Normalisation](#normalisation)
   - [Cumulative Table Design](#cumulative-table-design)
   - [The compactness vs usability tradeoff](#the-compactness-vs-usability-tradeoff)
+  - [Struct vs Array vs Map](#struct-vs-array-vs-map)
 
 ## Dimensional Data Modelling Complex Data Type and Cumulation
 
@@ -316,19 +317,96 @@ On the flipside, you have the most compact tables (i.e. not human readable). The
 
 There is a middle ground between the most compact and most usable table, which is where you use `ARRAY`, `MAP` and `STRUCT` to crunch the data down a little bit, but its a little bit harder to query. These types of tables are used in upstream staging / master data where the majority of  consumers are other data engineers.
 
-This table compares three common types of table designs based on their **intended audience**, **use case**, and **queryability** — especially across OLTP and OLAP systems.
+### Struct vs Array vs Map
 
-| Table Type              | Description                                                                                      | Queryability             | Primary Consumers        | System Context     | Use Case Examples                           |
-|-------------------------|--------------------------------------------------------------------------------------------------|--------------------------|---------------------------|--------------------|----------------------------------------------|
-| **Most Usable**         | - Human-readable<br>- Clean dimensions<br>- Easy `WHERE`/`GROUP BY` usage                         | ✅ Very easy              | Analysts, less technical users | OLAP (Analytical)  | Dashboards, Reports, BI tools               |
-|                         | - Analytics-focused<br>- Modeled with dimensional IDs and clean schema                          |                          |                           |                    |                                              |
-| **Middle Ground**       | - Uses **ARRAY**, **MAP**, **STRUCT** to reduce size<br>- Semi-structured format                 | ⚠️ Moderate (harder joins) | Data Engineers, Upstream Pipelines | Staging / Master | Cleaned data, shared layers, intermediate joins |
-|                         | - Not as verbose as usable tables, not as compressed as compact tables                          |                          |                           |                    |                                              |
-| **Most Compact**        | - Identifiers + encoded blob (e.g. compressed binary or JSON)<br>- Requires decoding to be usable | ❌ Not directly queryable | Backend Engineers, Systems | OLTP / Production | API responses, availability calendars (e.g. Airbnb) |
-|                         | - Optimized for storage, performance, and network IO<br>- Not analytics-friendly                 |                          |                           |                    |                                              |
+We had spoken a little about each of these complex data types in an earlier section. Now let's discuss on the tradeoffs:
 
-🧠 Summary
+> Note: `STRUCT` and `MAP` are very similar in terms of structuring and presenting the data (i.e. they both group data together), but are very distinct in terms of their usage as well as their individual attributes.
 
-- **OLAP systems** favor **usable tables**: designed for human readability and fast analytics.
-- **OLTP systems** favor **compact tables**: optimized for low latency and minimal network I/O.
-- **Intermediate formats** using semi-structured types (e.g., `ARRAY`, `STRUCT`) balance size and usability — common in data engineering layers.
+1. `STRUCT`
+- **Schema** : We had mentioned that `STRUCT` data type is like a table within a table - i.e. fixed mini-schema
+- **Keys** : Predefined and typed (like column names)
+- **values** : Can have different types per field
+- **Query Access** : Dot notation (`struct.field`)
+- Compression is good!
+- E.g. Well-known nested structure such as address: `STRUCT<street STRING, city STRING, zip_code STRING>` - all rows in `STRUCT` type column will have this signature:
+```json
+[
+  {
+    "street": "123 Orchard Road",
+    "city": "Singapore",
+    "postal_code": "238823"
+  },
+  {
+    "street": "88 Tanjong Pagar",
+    "city": "Singapore",
+    "postal_code": "089447"
+  },
+  {
+    "street": "456 Bukit Timah Rd",
+    "city": "Singapore",
+    "postal_code": "259756"
+  }
+]
+
+```
+
+2. `MAP`
+- **Schema** : Dynamic set of key-value stores
+- **Keys** : Flexible, keys can vary across rows
+- **values** : All values must be of the same data type
+- **Query Access** : Lookup by key (`map["key]`)
+- Compression is okay!
+- E.g. Unstructured or unpredictable attributes such as currency balances of each user: `MAP<STRING, FLOAT>` - this is where it differs from `STRUCT`, in that each row can vary in terms of structure and it may look something like:
+```json
+[
+  {
+    "user_id": "U123",
+    "currency_balances": {
+      "USD": 100.0,
+      "SGD": 135.5,
+      "EUR": 92.0
+    }
+  },
+  {
+    "user_id": "U456",
+    "currency_balances": {
+      "JPY": 10000.0,
+      "USD": 45.0
+    }
+  },
+  {
+    "user_id": "U789",
+    "currency_balances": {
+      "BTC": 0.003,
+      "ETH": 0.05
+    }
+  }
+]
+
+```
+
+3. `ARRAY`
+- Holds multiple values of the same data type
+- Ordinal - refers to something that has a position or order in sequence
+- E.g. sample data with list of strings for each user's recent purchases : `ARRAY<STRING>` :
+```json
+[
+  {
+    "user_id": "U001",
+    "recent_purchases": ["T-shirt", "Sneakers", "Backpack"]
+  },
+  {
+    "user_id": "U002",
+    "recent_purchases": ["Laptop"]
+  },
+  {
+    "user_id": "U003",
+    "recent_purchases": ["Book", "Pen", "Notebook", "Tablet"]
+  },
+  {
+    "user_id": "U004",
+    "recent_purchases": []
+  }
+]
+```
