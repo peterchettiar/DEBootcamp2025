@@ -24,15 +24,15 @@ Now, there are two ways we can install docker, either downloading  `Docker Deskt
 > Works on macOS 10.15+ (Catalina and newer)
 
 1. Download Docker Desktop
-- Go to: https://www.docker.com/products/docker-desktop
-- Download the Mac (Apple Silicon) or Mac (Intel Chip) version depending on your machine.
+  - Go to: https://www.docker.com/products/docker-desktop
+  - Download the Mac (Apple Silicon) or Mac (Intel Chip) version depending on your machine.
 
 2. Install Docker
-- Open the `.dmg` file and drag Docker into `Applications`.
+  - Open the `.dmg` file and drag Docker into `Applications`.
 
 3. Start Docker
-- Open Docker from Applications.
-- You’ll see the whale icon in the menu bar once it’s running.
+  - Open Docker from Applications.
+  - You’ll see the whale icon in the menu bar once it’s running.
 
 Next, let's talk about `Docker-Compose`. **Docker Compose** is a tool that lets you define and run multiple-container Docker applications using a single YAML configuration file (`docke-compose.yaml`).
 
