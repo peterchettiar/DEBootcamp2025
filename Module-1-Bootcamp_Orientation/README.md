@@ -19,3 +19,21 @@ A Docker image is a static snapshot of a container that we can define to run our
 Docker containers are stateless: any changes done inside a container will NOT be saved when the container is killed and started again. This is an advantage because it allows us to restore any container to its initial state in a reproducible manner, but you will have to store data elsewhere if you need to do so; a common way to do so is with volumes.
 
 Now, there are two ways we can install docker, either downloading  `Docker Desktop` from [Docker](https://www.docker.com/) or `Docker Engine` via command-line. Both ways are perfectly fine. Of course the only difference is that with Docker Desktop you have a user interface. If you're using a VM, then Docker Engine would be a preferred choice, and given that we're doing a local environment setup, we can just use `Docker Desktop`.
+
+🍏 For macOS
+> Works on macOS 10.15+ (Catalina and newer)
+
+1. Download Docker Desktop
+- Go to: https://www.docker.com/products/docker-desktop
+- Download the Mac (Apple Silicon) or Mac (Intel Chip) version depending on your machine.
+
+2. Install Docker
+- Open the `.dmg` file and drag Docker into `Applications`.
+
+3. Start Docker
+- Open Docker from Applications.
+- You’ll see the whale icon in the menu bar once it’s running.
+
+Next, let's talk about `Docker-Compose`. **Docker Compose** is a tool that lets you define and run multiple-container Docker applications using a single YAML configuration file (`docke-compose.yaml`).
+
+Since we installed `Docker Desktop`, we don't need to install `Docker Compose` seperately. You can run `docker compose version` to verify. But if you took the other approach (i.e. installing `Docker Engine` instead), then you need to install the associated binaries for docker compose. Again thses steps are prescribed in the previously mentioned [Github Gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687#run-docker-compose).
