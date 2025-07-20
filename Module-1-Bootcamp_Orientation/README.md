@@ -48,6 +48,9 @@ Now that we have installed `Docker`, we can proceed to spin up `postgres` server
 2. `PgAdmin` - `pgAdmin` is a free, open-source graphical user interface (GUI) tool for managing and administering PostgreSQL databases.
 3. `PgCLI` - `pgcli` is a command-line interface for PostgreSQL with auto-completion and syntax highlighting, designed to make querying more efficient and user-friendly.
 
+> Note: For PgCLI, we can just run command `pip install pgcli` on the terminal
+
 More basic information and concepts on `Docker` and `Postgre` can be found [here](https://github.com/peterchettiar/DEngZoomCamp_2025/tree/main/Module-1-docker-terraform#docker-and-postgres).
 
-For the `postgres` database and `pgadmin` we can define these services in a `docker-compose.yml` file. In other words, instead of downloading the images and spinning up 
+For the `postgres` database and `pgadmin` we can define these services in a `docker-compose.yml` file. In other words, instead of pulling the images from [DockerHub](https://hub.docker.com/) and spinning up the respective containers individually, using a docker-compose file is much faster approach. After defining these services, we can simply run the command `docker compose up -d` to spin up all the various containers in just one step.
+
