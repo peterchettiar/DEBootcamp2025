@@ -7,6 +7,7 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
-If you decide to pursue the course using a `Virtual Machine` instead of a local development approach, then this [github gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687) can provide a detailed setup of your virtual machine instance using GCP as cloud providedr, install a full anaconda distribution (this would make sure that `python` is installed into the VM), as well as installing `docker` and `docker compose`. 
+>[!TIP]
+>If you decide to pursue the course using a `Virtual Machine` instead of a local development approach, then this [github gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687) can provide a detailed setup of your virtual machine instance using GCP as cloud providedr, install a full anaconda distribution (this would make sure that `python` is installed into the VM), as well as installing `docker` and `docker compose`. 
 
 ## Docker and Docker Compose
