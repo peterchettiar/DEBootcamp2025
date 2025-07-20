@@ -36,7 +36,7 @@ Now, there are two ways we can install docker, either downloading  `Docker Deskt
 
 Next, let's talk about `Docker-Compose`. **Docker Compose** is a tool that lets you define and run multiple-container Docker applications using a single YAML configuration file (`docke-compose.yaml`).
 
-> Note: This is different for `Dockerfile` which is a blueprint for building a Docker image. 
+> Note: This is different from `Dockerfile` which is a blueprint for building a Docker image. `Docker-Compose` on the other hand is made up of multiple services, and each service can optionally use a Dockerfile (or a pre-built image).
 
 Since we installed `Docker Desktop`, we don't need to install `Docker Compose` seperately. You can run `docker compose version` to verify. But if you took the other approach (i.e. installing `Docker Engine` instead), then you need to install the associated binaries for docker compose. Again thses steps are prescribed in the previously mentioned [Github Gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687#run-docker-compose).
 
