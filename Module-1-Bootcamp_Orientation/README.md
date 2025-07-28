@@ -56,7 +56,7 @@ For the `postgres` database and `pgadmin` we can define these services in a `doc
 
 ## Running Postgres in Docker
 
-As mentioned in the previous section, we need to define our services in a `docker-compose.yml` file. Let's break down each service:
+As mentioned in the previous section, we need to define our services in a `docker-compose.yml` file. Let's break down the structure of each service:
 
 ```python
   postgres:
@@ -66,7 +66,7 @@ As mentioned in the previous section, we need to define our services in a `docke
     env_file:
       - .env
     environment:
-      - POSTGRES_DB=${POSTGRES_SCHEMA}
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
@@ -89,3 +89,38 @@ As mentioned in the previous section, we need to define our services in a `docke
 > [!IMPORTANT]
 > These `services` and their respective `keys` are defined under the top-level `key` called `services` where you define the containers your want to run and this can be limitless.
 > There is another important top-level `key` that you need to specify called `volumes` and this is usually defined at the end of the docker-compose file. This is where you define named volumes that Docker creates and manage. These persist data outside the container's lifecycle.
+
+Now that we have our docker-compose file as well as the requisite `.env` file that holds the configurations for the docker-compose file, we can no proceed to look at `init-db.sh` shell script that contains a series of commands to restore the `data.dump` file. We have to restore the `data.dump` file because it's not a plain SQL script — it's a binary archive created by `pg_dump`. You can run the command `file data.dump` to verify the file format, chances are its `data.dump: POSIX tar archive` which is a Tar format created using `pg_dump -Ft data.dump`. But since this is a custom format and not plain sql we cannot use the command `psql` but we have to use `pg_restore` instead.
+
+Given that the `data.dump` file is mounted into volumes in the container, we can manually restore the tables we can run the bash command `docker exec -it your_postgres_container pg_restore -U your_user -d your_db /path/to/data.dump`. This would restore the tables from within the container. Alternatively, we can prepate the following `init-db.sh`, and since its mounted as well in the `ocker-entrypoint-initdb.d` folder inside the `postgres` container it will be executed automatically when the container is spun-up:
+```bash
+#!/bin/bash
+set -e
+
+# Wait for the server to start
+echo "[INFO] Waiting for PostgreSQL to be ready..."
+until pg_isready -U "$POSTGRES_USER"; do
+  sleep 1
+done
+
+# Only restore if the DB is empty (to prevent duplicate restores)
+if [ "$(psql -U $POSTGRES_USER -d $POSTGRES_DB -tAc "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public';")" = "0" ]; then
+  echo "[INFO] Restoring database from data.dump..."
+  pg_restore -v --no-owner --no-privileges -U "$POSTGRES_USER" -d "$POSTGRES_DB" /docker-entrypoint-initdb.d/data.dump
+  echo "[SUCCESS] Restore complete."
+else
+  echo "[INFO] Database already initialized, skipping restore."
+fi
+```
+
+Couple of things is happeining in the script:
+- `#!/bin/bash` - `Shebang`: tells the system to run this script using the `bash` shell.
+- `set -e` - Causes the script to exit immediately if any command fails. Good for safety.
+- `pg_isready` - It is a PostgreSQL utility command that is used to check if a PostgreSQL server is ready to accept connections. And we are looping it using `until` (Keep checking if PostgreSQL is ready every second, and once its ready exit the loop)
+- Next we execute a SQL query to count how many tables exist in the public schema, and if its zero that means the database is empty and we can proceed to restore (`-tAc` = terse output, no formatting, just the raw count):
+```bash
+if [ "$(psql -U $POSTGRES_USER -d $POSTGRES_DB -tAc "SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public';")" = "0" ]; then
+```
+- Now to execute the restore command `pg_restore -v --no-owner --no-privileges -U "$POSTGRES_USER" -d "$POSTGRES_DB" /docker-entrypoint-initdb.d/data.dump`
+
+> Note: Please be reminded to make the shell script into an executable using the command `chmod +x scripts/init-db.sh`.
