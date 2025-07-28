@@ -1,9 +1,9 @@
 # Data Engineering Bootcamp - Day 0 Set Up
 
 In this section, we will be going through the [Bootcamp Orientation](https://www.youtube.com/watch?v=9Ng5juIg7LY&t=8s), specifically the software setups needed for the course. The main ones we would be looking at are:
-1. [`DOCKER + COMPOSE`](#docker-and-docker-compose)
-2. [`POSTGRES + PGADMIN SETUP`](#postgressql)
-3. `POSTGRES RUN IN DOCKER`
+1. [DOCKER + COMPOSE](#docker-and-docker-compose)
+2. [POSTGRES + PGADMIN SETUP](#postgressql)
+3. [POSTGRES RUN IN DOCKER](#running-postgres-in-docker)
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
@@ -54,3 +54,38 @@ More basic information and concepts on `Docker` and `Postgre` can be found [here
 
 For the `postgres` database and `pgadmin` we can define these services in a `docker-compose.yml` file. In other words, instead of pulling the images from [DockerHub](https://hub.docker.com/) and spinning up the respective containers individually, using a docker-compose file is much faster approach. After defining these services, we can simply run the command `docker compose up -d` to spin up all the various containers in just one step.
 
+## Running Postgres in Docker
+
+As mentioned in the previous section, we need to define our services in a `docker-compose.yml` file. Let's break down each service:
+
+```python
+  postgres:
+    image: postgres:14
+    restart: on-failure
+    container_name: ${DOCKER_CONTAINER}
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_SCHEMA}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${HOST_PORT}:5432"
+    volumes:
+      - ./data.dump:/docker-entrypoint-initdb.d/data.dump
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - postgres-data:/var/lib/ostgresql/data
+```
+
+- For the `postgres` service as well as the `pgadmin` service, you can see the following keys are defined (in the context of CLI, these would be flags):
+    - `image`: We pull the PostgreSQL version 14 image from Docker Hub
+    - `restart`: We specify that the container should be restarted if it exits with a non-zero exit code (i.e. if it crashes)
+    - `container_name`: We then assign a specific name for the container
+    - `env_file`: Load an environment file which is useful for managing configurations
+    - `environment`: Define environment variables to be passed into the container
+    - `ports`: Map container's port `5432` (Postgres default) to the host machines `${HOST_PORT}`
+    - `volumes`: Mounts files and directories from the host into the container
+  
+> [!IMPORTANT]
+> These `services` and their respective `keys` are defined under the top-level `key` called `services` where you define the containers your want to run and this can be limitless.
+> There is another important top-level `key` that you need to specify called `volumes` and this is usually defined at the end of the docker-compose file. This is where you define named volumes that Docker creates and manage. These persist data outside the container's lifecycle.
