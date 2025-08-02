@@ -4,8 +4,9 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
 1. [DOCKER + COMPOSE](#docker-and-docker-compose)
 2. [POSTGRES + PGADMIN SETUP](#postgressql)
 3. [POSTGRES RUN IN DOCKER](#running-postgres-in-docker)
-4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
-5. `PYTHON` - Version 3.11 and above
+     - [DOCKER COMPOSE](#docker-compose)
+5. `DBEAVER` - SQL editor (other editors can be used based on your preference)
+6. `PYTHON` - Version 3.11 and above
 
 >[!TIP]
 >If you decide to pursue the course using a `Virtual Machine` instead of a local development approach, then this [github gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687) can provide a detailed setup of your virtual machine instance using GCP as cloud providedr, install a full anaconda distribution (this would make sure that `python` is installed into the VM), as well as installing `docker` and `docker compose`. 
@@ -55,6 +56,8 @@ More basic information and concepts on `Docker` and `Postgre` can be found [here
 For the `postgres` database and `pgadmin` we can define these services in a `docker-compose.yml` file. In other words, instead of pulling the images from [DockerHub](https://hub.docker.com/) and spinning up the respective containers individually, using a docker-compose file is much faster approach. After defining these services, we can simply run the command `docker compose up -d` to spin up all the various containers in just one step.
 
 ## Running Postgres in Docker
+
+### Docker Compose
 
 As mentioned in the previous section, we need to define our services in a `docker-compose.yml` file. Let's break down the structure of each service:
 
