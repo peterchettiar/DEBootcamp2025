@@ -2,7 +2,7 @@
 
 In this section, we will be going through the [Bootcamp Orientation](https://www.youtube.com/watch?v=9Ng5juIg7LY&t=8s), specifically the software setups needed for the course. The main ones we would be looking at are:
 1. [Docker and Docker Compose](#docker-and-docker-compose)
-2. [PostgreSQL and PG Admin Setup](#postgressql)
+2. [PostgreSQL and PG Admin Setup](#postgressql-and-pg-admin-setup)
 3. [PostgreSQL run in Docker](#running-postgres-in-docker)
      - [Docker Compose](#docker-compose)
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
@@ -42,7 +42,7 @@ Next, let's talk about `Docker-Compose`. **Docker Compose** is a tool that lets 
 Since we installed `Docker Desktop`, we don't need to install `Docker Compose` seperately. You can run `docker compose version` to verify. But if you took the other approach (i.e. installing `Docker Engine` instead), then you need to install the associated binaries for docker compose. Again thses steps are prescribed in the previously mentioned [Github Gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687#run-docker-compose).
 
 
-## PostgresSQL
+## PostgresSQL and PG Admin Setup
 
 Now that we have installed `Docker`, we can proceed to spin up `postgres` server and `pgadmin` UI using docker without the need to install the `PostgreSQL` binaries or deal with system configurations. But before doing so, let's look at some terminologies to help us understand the various components that make up the database.
 1. `PostgreSQL` - This is a database server that is reliable as well as the most powerful open-source database engine. It is a relational database management system (RDBMS) that lets you store, manage, and query structured data using SQL (Structured Query Language).
