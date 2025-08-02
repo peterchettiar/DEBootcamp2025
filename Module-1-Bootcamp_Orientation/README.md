@@ -7,7 +7,7 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
      - [Docker Compose](#docker-compose)
      - [Initialisation Scripts](#initialisation-scripts)
      - [PG Admin Configuration](#pg-admin-configuration)
-4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
+4. [DBeaver Setup](#dbeaver-setup) - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
 >[!TIP]
@@ -153,4 +153,18 @@ Since our `PG Admin` service is spun-up using the docker-compose file (If its no
 > [!TIP]
 > `docker-compose up --build -d` is used to build and start your Docker Compose setup in detached mode. `--buiild` forces a rebuild of the services (helpful if you have changed the `init-db.sh`, Dockerfile, or anything in `./init`
 
+### DBeaver Setup
 
+To be honest you do not need to follow this step as PgAdmin is capable to handle querying of database but I prefer `DBeaver` as my choice of SQL editor, hence I will be going through the setup which is fairly similar to PgAdmin.
+
+Once you've opened up DBeaver, you can press the keys `ctrl + shift + N` to create a new database connection - a new window should pop-up.
+<img width="808" height="691" alt="image" src="https://github.com/user-attachments/assets/45ecc853-4f6f-4ea0-8b00-39d675295a2a" />
+
+Select your database, in our its `PostgreSQL` and then click `Next`. After which you enter your connection details:
+- Host: localhost
+- Port: 5432 (or your mapped port)
+- Database: postgres (or your actual DB name)
+- Username: e.g., postgres or ${POSTGRES_USER}
+- Password: e.g., your_password
+
+<img width="817" height="684" alt="image" src="https://github.com/user-attachments/assets/2c88d262-69ca-41a3-bf94-16c0a559f18e" />
