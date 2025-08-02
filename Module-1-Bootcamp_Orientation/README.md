@@ -5,6 +5,7 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
 2. [PostgreSQL and PG Admin Setup](#postgressql-and-pg-admin-setup)
 3. [PostgreSQL run in Docker](#running-postgres-in-docker)
      - [Docker Compose](#docker-compose)
+     - [Initialisation Scripts](#initialisation-scripts)
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
@@ -93,6 +94,8 @@ As mentioned in the previous section, we need to define our services in a `docke
 > These `services` and their respective `keys` are defined under the top-level `key` called `services` where you define the containers your want to run and this can be limitless.
 > There is another important top-level `key` that you need to specify called `volumes` and this is usually defined at the end of the docker-compose file. This is where you define named volumes that Docker creates and manage. These persist data outside the container's lifecycle.
 
+### Initialisation Scripts
+
 Now that we have our docker-compose file as well as the requisite `.env` file that holds the configurations for the docker-compose file, we can now proceed to look at `init-db.sh` shell script that contains a series of commands to restore the `data.dump` file. We have to restore the `data.dump` file because it's not a plain SQL script — it's a binary archive created by `pg_dump`. You can run the command `file data.dump` to verify the file format, chances are its `data.dump: POSIX tar archive` which is a Tar format created using `pg_dump -Ft data.dump`. But since this is a custom format and not plain sql we cannot use the command `psql` but we have to use `pg_restore` instead.
 
 Given that the `data.dump` file is mounted into volumes in the container, we can manually restore the tables by running the bash command `docker exec -it your_postgres_container pg_restore -U your_user -d your_db /path/to/data.dump` from within the bash terminal in the container. This would restore the tables from within the container. Alternatively, we can prepare the following `init-db.sh`, and since its mounted as well in the `docker-entrypoint-initdb.d` folder inside the `postgres` container it will be executed automatically when the container is spun-up:
@@ -127,3 +130,10 @@ if [ "$(psql -U $POSTGRES_USER -d $POSTGRES_DB -tAc "SELECT COUNT(*) FROM pg_tab
 - Now to execute the restore command `pg_restore -v --no-owner --no-privileges -U "$POSTGRES_USER" -d "$POSTGRES_DB" /docker-entrypoint-initdb.d/data.dump`
 
 > Note: Please be reminded to make the shell script into an executable using the command `chmod +x scripts/init-db.sh`.
+
+### PG Admin Configuration
+
+Since our `PG Admin` service is spun-up using the docker-compose file (If its not running then use the command `docker compose up --build -d`), we now need to connect PG Admin to the postgres database. So we take the following steps for connection:
+
+1. Open a web browser and navigate to your localhost page (i.e. `http://localhost:5050/` this is what we had mapped to the default pgadmin port in the container.
+2. 
