@@ -1,4 +1,4 @@
-<img width="1000" height="760" alt="image" src="https://github.com/user-attachments/assets/739a8b63-1089-48df-87e5-f278cf95e1e5" /># Data Engineering Bootcamp - Day 0 Set Up
+# Data Engineering Bootcamp - Day 0 Set Up
 
 In this section, we will be going through the [Bootcamp Orientation](https://www.youtube.com/watch?v=9Ng5juIg7LY&t=8s), specifically the software setups needed for the course. The main ones we would be looking at are:
 1. [Docker and Docker Compose](#docker-and-docker-compose)
@@ -152,3 +152,4 @@ Since our `PG Admin` service is spun-up using the docker-compose file (If its no
 
 > [!TIP]
 > `docker-compose up --build -d` is used to build and start your Docker Compose setup in detached mode. `--buiild` forces a rebuild of the services (helpful if you have changed the `init-db.sh`, Dockerfile, or anything in `./init`
+
