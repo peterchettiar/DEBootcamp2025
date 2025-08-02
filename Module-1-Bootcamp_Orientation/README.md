@@ -6,7 +6,7 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
 3. [PostgreSQL run in Docker](#running-postgres-in-docker)
      - [Docker Compose](#docker-compose)
      - [Initialisation Scripts](#initialisation-scripts)
-     - [PG Admin Configuration](#pgadmin-configuration)
+     - [PG Admin Configuration](#pg-admin-configuration)
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
@@ -152,4 +152,5 @@ Since our `PG Admin` service is spun-up using the docker-compose file (If its no
 
 > [!TIP]
 > `docker-compose up --build -d` is used to build and start your Docker Compose setup in detached mode. `--buiild` forces a rebuild of the services (helpful if you have changed the `init-db.sh`, Dockerfile, or anything in `./init`
+
 
