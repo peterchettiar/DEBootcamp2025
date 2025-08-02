@@ -6,6 +6,7 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
 3. [PostgreSQL run in Docker](#running-postgres-in-docker)
      - [Docker Compose](#docker-compose)
      - [Initialisation Scripts](#initialisation-scripts)
+     - [PG Admin Configuration](#pgadmin-configuration)
 4. `DBEAVER` - SQL editor (other editors can be used based on your preference)
 5. `PYTHON` - Version 3.11 and above
 
@@ -136,4 +137,9 @@ if [ "$(psql -U $POSTGRES_USER -d $POSTGRES_DB -tAc "SELECT COUNT(*) FROM pg_tab
 Since our `PG Admin` service is spun-up using the docker-compose file (If its not running then use the command `docker compose up --build -d`), we now need to connect PG Admin to the postgres database. So we take the following steps for connection:
 
 1. Open a web browser and navigate to your localhost page (i.e. `http://localhost:5050/` this is what we had mapped to the default pgadmin port in the container.
-2. 
+2. This is where the [environment file]() comes in handy, with the username and password for PG Admin defined in the environment file, we can log into the PG Admin GUI.
+<img width="1194" height="885" alt="image" src="https://github.com/user-attachments/assets/4e48e8c2-31c4-4d96-8b74-ea0e06c171e9" />
+
+
+4. 
+
