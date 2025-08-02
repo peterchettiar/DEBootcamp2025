@@ -158,6 +158,7 @@ Since our `PG Admin` service is spun-up using the docker-compose file (If its no
 To be honest you do not need to follow this step as PgAdmin is capable to handle querying of database but I prefer `DBeaver` as my choice of SQL editor, hence I will be going through the setup which is fairly similar to PgAdmin.
 
 Once you've opened up DBeaver, you can press the keys `ctrl + shift + N` to create a new database connection - a new window should pop-up.
+
 <img width="808" height="691" alt="image" src="https://github.com/user-attachments/assets/45ecc853-4f6f-4ea0-8b00-39d675295a2a" />
 
 Select your database, in our its `PostgreSQL` and then click `Next`. After which you enter your connection details:
@@ -168,3 +169,6 @@ Select your database, in our its `PostgreSQL` and then click `Next`. After which
 - Password: e.g., your_password
 
 <img width="817" height="684" alt="image" src="https://github.com/user-attachments/assets/2c88d262-69ca-41a3-bf94-16c0a559f18e" />
+
+> [!TIP]
+> It would be advised to `Test Connection` first because if there is a driver missing, DBeaver will prompt to download it—accept it.
