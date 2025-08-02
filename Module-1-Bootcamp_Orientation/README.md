@@ -8,7 +8,6 @@ In this section, we will be going through the [Bootcamp Orientation](https://www
      - [Initialisation Scripts](#initialisation-scripts)
      - [PG Admin Configuration](#pg-admin-configuration)
 4. [DBeaver Setup](#dbeaver-setup) - SQL editor (other editors can be used based on your preference)
-5. `PYTHON` - Version 3.11 and above
 
 >[!TIP]
 >If you decide to pursue the course using a `Virtual Machine` instead of a local development approach, then this [github gist](https://gist.github.com/peterchettiar/6e719cd2bbdb3e6aae4e6d1895670687) can provide a detailed setup of your virtual machine instance using GCP as cloud providedr, install a full anaconda distribution (this would make sure that `python` is installed into the VM), as well as installing `docker` and `docker compose`. 
@@ -172,3 +171,4 @@ Select your database, in our its `PostgreSQL` and then click `Next`. After which
 
 > [!TIP]
 > It would be advised to `Test Connection` first because if there is a driver missing, DBeaver will prompt to download it—accept it.
+
