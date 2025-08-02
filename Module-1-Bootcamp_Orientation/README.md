@@ -1,4 +1,4 @@
-# Data Engineering Bootcamp - Day 0 Set Up
+<img width="1000" height="760" alt="image" src="https://github.com/user-attachments/assets/739a8b63-1089-48df-87e5-f278cf95e1e5" /># Data Engineering Bootcamp - Day 0 Set Up
 
 In this section, we will be going through the [Bootcamp Orientation](https://www.youtube.com/watch?v=9Ng5juIg7LY&t=8s), specifically the software setups needed for the course. The main ones we would be looking at are:
 1. [Docker and Docker Compose](#docker-and-docker-compose)
@@ -137,9 +137,18 @@ if [ "$(psql -U $POSTGRES_USER -d $POSTGRES_DB -tAc "SELECT COUNT(*) FROM pg_tab
 Since our `PG Admin` service is spun-up using the docker-compose file (If its not running then use the command `docker compose up --build -d`), we now need to connect PG Admin to the postgres database. So we take the following steps for connection:
 
 1. Open a web browser and navigate to your localhost page (i.e. `http://localhost:5050/` this is what we had mapped to the default pgadmin port in the container.
+
 2. This is where the [environment file]() comes in handy, with the username and password for PG Admin defined in the environment file, we can log into the PG Admin GUI.
 <img width="1194" height="885" alt="image" src="https://github.com/user-attachments/assets/4e48e8c2-31c4-4d96-8b74-ea0e06c171e9" />
 
+3. Once logged in, you need to create a new server. Right-click on `Servers` and then on `Register` followed by `Server..`
+<img width="1000" height="760" alt="image" src="https://github.com/user-attachments/assets/94aef058-b258-4441-ae4c-d4d4db287182" />
 
-4. 
+4. In the pop-up window, in the `General` tab give the Server a name like `DEBootCamp_2025`
+<img width="748" height="625" alt="image" src="https://github.com/user-attachments/assets/5253565a-f602-4701-a7a8-5a2237bab090" />
 
+5. In the `Connection` tab in the same window we need to input the `Host name/address` and this is usually the name of the service defined in our `docker-compose.yml` file. In our case its the `postgres` service. Similarly, we need define the port number (i.e. `5432`). As for `Maintenance database` field is the database in which pgAdmin will connect to when establishing a connection to your PostgreSQL server, and in our case its `debootcamp_2025` (the name of the database as defined in the environement file)
+<img width="764" height="636" alt="image" src="https://github.com/user-attachments/assets/92b2350b-6da7-4cb1-b6e3-cd45197fbc19" />
+
+> [!TIP]
+> `docker-compose up --build -d` is used to build and start your Docker Compose setup in detached mode. `--buiild` forces a rebuild of the services (helpful if you have changed the `init-db.sh`, Dockerfile, or anything in `./init`
