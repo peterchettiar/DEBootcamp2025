@@ -3,7 +3,7 @@
 ### Table of contents
 
 - [Data Modelling - Cumulative Dimensions, Struct and Array](#data-modelling-cumulative-dimensions-struct-and-array)
-  - [Complex Data Types](#complex-data-types)
+  - [Creating an Array of structs](#creating-an-array-of-structs)
 
 ## Data Modelling - Cumulative Dimensions, Struct and Array
 
@@ -27,3 +27,17 @@ This way:
 - You have one row per player, removing the "temporal" spread.
 - The seasonal data is nested in an array (e.g. JSON-like structure)
 - Joins with other tables are now faster, more efficient, and preserve compression.
+
+### Creating an Array of Structs
+
+To create the array of seasons, which is essentially an `ARRAY` of `STRUCTS`, we can create a composite type in PostgreSQL (also called a user-defined type) - it allows you to define a custom data structure with multiple fields. You can think of it as building an object (instance of a class) in Python. You can define the `season_stats` STRUCT, which is its own data type, in SQL as:
+```sql
+CREATE TYPE season_stats AS (
+  season INTEGER,
+  age TEXT,
+  gp INTEGER,
+  pts REAL,
+  reb REAL,
+  ast REAL
+);
+```
