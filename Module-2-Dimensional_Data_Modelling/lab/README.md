@@ -4,6 +4,7 @@
 
 - [Data Modelling - Cumulative Dimensions, Struct and Array](#data-modelling-cumulative-dimensions-struct-and-array)
   - [Creating an Array of structs](#creating-an-array-of-structs)
+  - [Creating a table with new Schema](#creating-a-table-with-new-schema)
 
 ## Data Modelling - Cumulative Dimensions, Struct and Array
 
@@ -41,3 +42,66 @@ CREATE TYPE season_stats AS (
   ast REAL
 );
 ```
+
+So the equivalent of this in Python OOP would be a class with attributes for each field as follows:
+```python
+Class SeasonStats:
+    def __init__(self, season: int, age: str, gp: int, pts: float, reb: float, ast: float):
+        self.season = season
+        self.age = age
+        self.gp = gp
+        self.pts = pts
+        self.reb = reb
+        self.ast = ast        
+```
+
+In the event that you made a mistake and would like to change/make amendments to the `TYPE` you have to follow these steps:
+1. We need to make sure that the composite type is not used in any table, it it is we need to drop it first.
+```sql
+-- If we want to make changes to composite type, we need to first alter table using the type
+ALTER TABLE players DROP COLUMN season_stats;
+```
+2. Now that we know that the composite type is not being used in any table, we can drop it safely altogether by running the query `DROP TYPE season_stats;`
+3. Since we dropped the old type, we need to re-create with the necessary fields with the changes incorporated
+```sql
+-- Then create the new type again
+CREATE TYPE season_stats AS (
+  season INTEGER,
+  age TEXT,
+  games_played INTEGER,
+  points NUMERIC,
+  rebounds NUMERIC,
+  assits NUMERIC
+);
+```
+4. Lastly, if need be, we can add the column back to the table as such:
+```sql
+-- Lastly, re-add the column
+ALTER TABLE players ADD COLUMN season_stats season_stats[];
+```
+
+### Creating a table with a new schema
+
+The next step then would be to create a table with the schema that we had envisioned (i.e. one record per player with season statistics grouped in an array of structs).
+The SQL query for creating an empty table with our desired schema is as follows:
+```sql
+CREATE TABLE players (
+  player_name TEXT,
+  height TEXT,
+  college TEXT,
+  country TEXT,
+  draft_year TEXT,
+  draft_round TEXT,
+  draft_number TEXT,
+  season_stats season_stats[], -- array of composite structs
+  current_season INTEGER,
+  PRIMARY KEY (player_name, current_season)
+);
+```
+
+> [!TIP]
+> It is worth pointing out that in the above syntax, it is not mandatory to provide a `PRIMARY_KEY` statement when creating a table but it is particularly useful as a constraint:
+> 1. Uniquely identifies each row in table
+> 2. Cannot be `NULL` (Postgres enforces `NOT NULL` automatically for primary key columns)
+> 3. Is indexed automatically for faster lookups
+
