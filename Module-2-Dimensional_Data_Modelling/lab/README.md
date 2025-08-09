@@ -4,7 +4,7 @@
 
 - [Data Modelling - Cumulative Dimensions, Struct and Array](#data-modelling-cumulative-dimensions-struct-and-array)
   - [Creating an Array of structs](#creating-an-array-of-structs)
-  - [Creating a table with new Schema](#creating-a-table-with-a-new-schema)
+  - [Creating a table with a new Schema](#creating-a-table-with-a-new-schema)
 
 ## Data Modelling - Cumulative Dimensions, Struct and Array
 
@@ -104,5 +104,6 @@ CREATE TABLE players (
 > 1. Uniquely identifies each row in table
 > 2. Cannot be `NULL` (Postgres enforces `NOT NULL` automatically for primary key columns)
 > 3. Is indexed automatically for faster lookups
+
 
 
