@@ -5,6 +5,7 @@
 - [Data Modelling - Cumulative Dimensions, Struct and Array](#data-modelling-cumulative-dimensions-struct-and-array)
   - [Creating an Array of structs](#creating-an-array-of-structs)
   - [Creating a table with a new Schema](#creating-a-table-with-a-new-schema)
+  - [Inserting Values into table](#inserting-values-into-table)
 
 ## Data Modelling - Cumulative Dimensions, Struct and Array
 
@@ -105,5 +106,57 @@ CREATE TABLE players (
 > 2. Cannot be `NULL` (Postgres enforces `NOT NULL` automatically for primary key columns)
 > 3. Is indexed automatically for faster lookups
 
+### Inserting Values into table
 
+Now, that we have created our target table (for a lack of a better term) with our desired schema, we can proceed to populate it with the values from `player_seasons`. As mentioned, our objective is to accumulate each player's statistics on a per season basis. We will take a [Cumulative Table Design](https://github.com/peterchettiar/DEBootcamp2025/tree/main/Module-2-Dimensional_Data_Modelling#cumulative-table-design) approach when inserting these values into the new table. Based on the cumulative design example below, we can see there are two major components; `yesterday` and `today`.
+
+<img width="640" height="266" alt="image" src="https://github.com/user-attachments/assets/a8983a1e-4ecf-427b-b254-60cd9b79ab53" />
+
+> [!IMPORTANT]
+> The goal:
+> Merge today’s new stats into yesterday’s cumulative record so that season_stats becomes a growing array of season data per player.
+
+1.  We start off with the `yesterday` table which is essentially our cumulative table - our first step would be to instantiate the table as follows:
+```sql
+WITH yesterday AS (
+  SELECT * FROM players
+  WHERE current_season = 1995
+),
+```
+> Note: We select `1995` as the starting year of the accumulation because the minimum year in the `player_seasons` table is `1996`.
+
+2. Next, we would also create a CTE for `today` - these are the temporal records that we want to extract from the raw table.
+```sql
+  today AS (
+  SELECT * FROM player_seasons
+  WHERE season = 1996
+  )
+```
+
+3. Now that we have the CTEs for `yesterday` and `today`, we can proceed with the creation of the seed query that would be eventually used for the cumulation. Its the seed query because when we run the query for `yesterday` it should return us null.
+```sql
+SELECT 
+  COALESCE(t.player_name, y.player_name) as player_name,
+  COALESCE(t.height, y.height) as height,
+  COALESCE(t.college, y.college) as college,
+  COALESCE(t.country, y.country) as country,
+  COALESCE(t.draft_year, y.draft_year) as draft_year,
+  COALESCE(t.draft_round, y.draft_round) as draft_round,
+  COALESCE(t.draft_number, y.draft_number) as draft_number,
+  CASE 
+    WHEN y.season_stats IS NULL THEN ARRAY[ROW(t.season, t.age, t.gp, t.pts, t.reb, t.ast)::season_stats]
+    WHEN t.season IS NOT NULL THEN y.season_stats || ARRAY[ROW(t.season, t.age, t.gp, t.pts, t.reb, t.ast)::season_stats] 
+  ELSE y.season_stats 
+  END AS season_stats,
+  COALESCE(t.season, y.current_season + 1) AS current_season
+FROM yesterday y FULL OUTER JOIN today t ON y.player_name = t.player_name;
+```
+When we perform a `FULL OUTER JOIN` we are merging both tables, but since they are have the same fields, we can use the `COALESCE` function to return the first non-null value of same field name and collapse the view into a unified one instead of merging them side-by-side. The way the structure of the query is, you would have noticed that its similar to our schema of the `players` table that we had created. Hence, it should be apparent that we would be inserting into the `players` table records from the seed query. The `CASE` statement considers 3 scenarios for `season_stats` fields:
+1. If the player is new (no yesterday record) → start a new array with this season’s stats.
+2. If the player already has stats → append this season’s row to the array (|| concatenates arrays in Postgres).
+3. If no new season data → keep the old array.
+4. `COALESCE(t.season, y.current_season + 1) AS current_season` - For existing players, we increment the year. As for new players, we take the `t.season` directly.
+
+This is exactly the cumulative design principle:
+> Append new data to existing historical data without losing the past.
 
