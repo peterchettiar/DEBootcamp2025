@@ -160,4 +160,5 @@ When we perform a `FULL OUTER JOIN` we are merging both tables, but since they a
 This is exactly the cumulative design principle:
 > Append new data to existing historical data without losing the past.
 
-
+4. Last step would be to add the `INSERT INTO` statement to write in the output of the subsequent query into the `players` table. In other words, we are now inserting the merged result back into the `players` table to refresh the cumulative dataset.
+5. Last but not least repeat the steps for up to season 2002 for course purposes, else you can run a loop to load the cumulative data from the first season to the last season of the raw dataset (i.e. 1996 to 2022).
