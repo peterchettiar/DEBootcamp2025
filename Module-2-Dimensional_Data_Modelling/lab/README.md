@@ -113,7 +113,7 @@ Now, that we have created our target table (for a lack of a better term) with ou
 <img width="640" height="266" alt="image" src="https://github.com/user-attachments/assets/a8983a1e-4ecf-427b-b254-60cd9b79ab53" />
 
 > [!IMPORTANT]
-> The goal:
+> **The goal**:
 > Merge today’s new stats into yesterday’s cumulative record so that season_stats becomes a growing array of season data per player.
 
 1.  We start off with the `yesterday` table which is essentially our cumulative table - our first step would be to instantiate the table as follows:
@@ -159,4 +159,5 @@ When we perform a `FULL OUTER JOIN` we are merging both tables, but since they a
 
 This is exactly the cumulative design principle:
 > Append new data to existing historical data without losing the past.
+
 
