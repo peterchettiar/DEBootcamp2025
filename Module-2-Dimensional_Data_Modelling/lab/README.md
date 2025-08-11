@@ -163,3 +163,23 @@ This is exactly the **cumulative design principle**:
 4. Last step would be to add the `INSERT INTO` statement to write in the output of the subsequent query into the `players` table. In other words, we are now inserting the merged result back into the `players` table to refresh the cumulative dataset.
 5. Last but not least repeat the steps for up to season 2002 for course purposes, else you can run a loop to load the cumulative data from the first season to the last season of the raw dataset (i.e. 1996 to 2022).
 
+This would be how we get to our cumulative table. Let's look at an example, I want to look at `Michael Jorden` season statistics for example. When I query `SELECT * FROM players WHERE current_season = 2001 and player_name = 'Michael Jordan';`, I should get something like the following:
+
+<img width="1353" height="106" alt="image" src="https://github.com/user-attachments/assets/7b9d2acf-783d-4072-809d-4c15543e016f" />
+
+>[!TIP]
+>If we want to reverse the process to get back the same raw table we can simply unnest the columns and expand the composite into columns:
+```sql
+WITH unnested AS (
+    SELECT 
+        player_name,
+        unnest(season_stats) AS season_stats  -- no need to cast here
+    FROM players
+    WHERE current_season = 2001
+      AND player_name = 'Michael Jordan'
+)
+SELECT 
+    player_name,
+    (season_stats).*  -- expand composite into columns
+FROM unnested;
+```
