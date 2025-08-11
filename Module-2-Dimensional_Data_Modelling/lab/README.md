@@ -167,8 +167,7 @@ This would be how we get to our cumulative table. Let's look at an example, I wa
 
 <img width="1353" height="106" alt="image" src="https://github.com/user-attachments/assets/7b9d2acf-783d-4072-809d-4c15543e016f" />
 
->[!TIP]
->If we want to reverse the process to get back the same raw table we can simply unnest the columns and expand the composite into columns:
+If we want to reverse the process to get back the same raw table we can simply unnest the columns and expand the composite into columns:
 ```sql
 WITH unnested AS (
     SELECT 
@@ -176,10 +175,27 @@ WITH unnested AS (
         unnest(season_stats) AS season_stats  -- no need to cast here
     FROM players
     WHERE current_season = 2001
-      AND player_name = 'Michael Jordan'
 )
 SELECT 
     player_name,
     (season_stats).*  -- expand composite into columns
 FROM unnested;
 ```
+
+To summarise what we’ve just described, in case you haven't noticed, is basically `run-length encoding` for relational data.
+
+In the `players` cumulative table:
+- One row per player
+- `season_stats[]` holds the _entire history_ of per-season records
+- Player’s static attributes (height, draft year, college, etc.) are stored only once, instead of repeating them for every season
+- It’s effectively _compressed_ because we avoid storing redundant data
+
+When you unnest:
+- You expand each `season_stats` entry into its own row, restoring the original temporal structure
+- The default behavior of `unnest` combined with your composite type ordering ensures alphabetical ordering by `player_name`, and chronological ordering by `season`
+- This means if you want to run comparisons or joins that operate season-by-season, you expand after joining to keep the cumulative table efficient
+
+> [!TIP]
+> Best practice:
+> Do joins on the compressed form — less data movement, less memory usage
+> Unnest only when you need row-by-row analytics (e.g., season-specific filtering, per-year stats)
