@@ -6,6 +6,7 @@
   - [Creating an Array of structs](#creating-an-array-of-structs)
   - [Creating a table with a new Schema](#creating-a-table-with-a-new-schema)
   - [Inserting Values into table](#inserting-values-into-table)
+  - [Analytical Queries](#analytical-queries)_
 
 ## Data Modelling - Cumulative Dimensions, Struct and Array
 
@@ -167,7 +168,7 @@ This would be how we get to our cumulative table. Let's look at an example, I wa
 
 <img width="1353" height="106" alt="image" src="https://github.com/user-attachments/assets/7b9d2acf-783d-4072-809d-4c15543e016f" />
 
-If we want to reverse the process to get back the same raw table we can simply unnest the columns and expand the composite into columns:
+Alternatively, if we want to reverse the process to get back the same raw table we can simply unnest the columns and expand the composite into columns:
 ```sql
 WITH unnested AS (
     SELECT 
@@ -196,6 +197,8 @@ When you unnest:
 - This means if you want to run comparisons or joins that operate season-by-season, you expand after joining to keep the cumulative table efficient
 
 > [!TIP]
-> Best practice:
-> Do joins on the compressed form — less data movement, less memory usage
+> **Best practice:**
+> Do joins on the compressed form — less data movement, less memory usage.
 > Unnest only when you need row-by-row analytics (e.g., season-specific filtering, per-year stats)
+
+### Analytical Queries
